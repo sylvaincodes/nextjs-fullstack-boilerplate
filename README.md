@@ -99,11 +99,10 @@ api/
 - Stripe account (optional)
 - ElevenLabs account (optional)
 
----
 
 ## 🚀 Installation
 
-```bash
+```
 git clone https://github.com/sylvaincodes/nextjs-fullstack-boilerplate.git
 cd nextjs-fullstack-boilerplate```
 
@@ -136,7 +135,6 @@ MAIL_SECURE=true
 ```
 
 Backend .env.local
-
 ```
 NEXT_PUBLIC_WEBSITE_URL=http://localhost:3001
 
@@ -164,28 +162,28 @@ NODE_ENV=development
 
 ## 🧪 Run Development Servers
 Terminal 1: Backend
-cd api && bun dev
+```cd api && bun dev```
 
-cd front && bun dev
+```cd front && bun dev```
 
 ##  🧪 Testing
 
 ###  Frontend
-cd front && bun run test
+```cd front && bun run test```
 
 ###  Backend
-cd api && bun run test
+```cd api && bun run test```
 
 ###  End-to-End
-bun run test:e2e
+```bun run test:e2e```
 
 ## 📦 Build for Production
 
 ###  Frontend
-cd front && bun run build
+```cd front && bun run build```
 
 ###  Backend
-cd api && bun run build
+```cd api && bun run build```
 
 
 ## 🤝 Contributing
