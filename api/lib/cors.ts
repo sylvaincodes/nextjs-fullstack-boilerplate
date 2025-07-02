@@ -164,13 +164,17 @@ function handlePreflightRequest(
 
   // Check if origin is allowed
   if (!isOriginAllowed(origin, config.allowedOrigins)) {
-    console.warn("CORS: Origin not allowed:", origin);
+    if (process.env.NODE_ENV === "development") {
+      console.warn("CORS: Origin not allowed:", origin);
+    }
     return new NextResponse("CORS policy violation", { status: 403 });
   }
 
   // Check if method is allowed
   if (requestMethod && !config.allowedMethods.includes(requestMethod)) {
-    console.warn("CORS: Method not allowed:", requestMethod);
+    if (process.env.NODE_ENV === "development") {
+      console.warn("CORS: Method not allowed:", requestMethod);
+    }
     return new NextResponse("Method not allowed", { status: 405 });
   }
 
@@ -304,15 +308,15 @@ export function logCORSConfig(): void {
   const validation = validateCORSConfig();
 
   if (process.env.NODE_ENV === "development") {
-    // console.log("CORS Configuration:", {
-    //   environment: process.env.NODE_ENV,
-    //   allowedOrigins: config.allowedOrigins,
-    //   allowedMethods: config.allowedMethods,
-    //   allowCredentials: config.allowCredentials,
-    //   maxAge: config.maxAge,
-    //   validation: validation.valid ? "✅ Valid" : "❌ Invalid",
-    //   errors: validation.errors,
-    // });
+    console.log("CORS Configuration:", {
+      environment: process.env.NODE_ENV,
+      allowedOrigins: config.allowedOrigins,
+      allowedMethods: config.allowedMethods,
+      allowCredentials: config.allowCredentials,
+      maxAge: config.maxAge,
+      validation: validation.valid ? "✅ Valid" : "❌ Invalid",
+      errors: validation.errors,
+    });
   }
 }
 

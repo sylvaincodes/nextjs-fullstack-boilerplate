@@ -5,6 +5,7 @@ import ToasterProvider from "./ToastProvider";
 import StateProvider from "./state-provider";
 import TooltipProvider from "./tooltip-provider";
 import { IntlProvider } from "./intl-provider.tsx";
+// import { SentryProvider } from "./sentry-provider.tsx";
 
 export default function Providers({
   children,
@@ -16,6 +17,7 @@ export default function Providers({
   messages: Record<string, string>;
 }) {
   return (
+    // <SentryProvider>
     <StateProvider>
       <ClerkProvider>
         <FramerMotionProvider>
@@ -35,5 +37,6 @@ export default function Providers({
         {/* </ThemeProvider> */}
       </ClerkProvider>
     </StateProvider>
+    // </SentryProvider>
   );
 }

@@ -1,26 +1,20 @@
+/**
+ * Clerk Webhook Handler for User & Session events.
+ * Handles `user.created`, `user.updated`, `user.deleted`, `session.created`, `session.removed`.
+ * Automatically syncs Clerk user data with local MongoDB database and logs relevant user activity.
+ */
+
 import connectDB from "@/lib/database";
-import { activityLogRepository } from "@/repositories/ActivityLogRepository";
 import { userRepository } from "@/repositories/UserRepository";
 import { clerkClient, WebhookEvent } from "@clerk/nextjs/server";
 import type { Handler } from "@netlify/functions";
 import isEqual from "lodash.isequal";
 import { Webhook } from "svix";
+
 const webhookSecret = process.env.CLERK_WEBHOOK_SECRET;
 
-export interface ClerkUser {
-  id: string;
-  email_addresses: { id: string; email_address: string }[];
-  first_name: string;
-  last_name: string;
-  image_url: string;
-  username: string;
-  primary_email_address_id: string;
-}
-
 if (!webhookSecret) {
-  throw new Error(
-    "Please add CLERK_WEBHOOK_SECRET from Clerk Dashboard to .env or .env.local"
-  );
+  throw new Error("Missing CLERK_WEBHOOK_SECRET in .env");
 }
 
 export const handler: Handler = async (event) => {
@@ -41,25 +35,21 @@ export const handler: Handler = async (event) => {
     };
   }
 
-  // Get the headers
+  // Extract Svix signature headers
   const svix_id = headers["svix-id"];
   const svix_timestamp = headers["svix-timestamp"];
   const svix_signature = headers["svix-signature"];
 
-  // If there are no headers, error out
   if (!svix_id || !svix_timestamp || !svix_signature) {
     return {
       statusCode: 400,
-      body: JSON.stringify({ error: "Error occurred -- no svix headers" }),
+      body: JSON.stringify({ error: "Missing Svix signature headers" }),
     };
   }
 
-  // Create a new Svix instance with your secret.
   const wh = new Webhook(webhookSecret);
-
   let evt: WebhookEvent;
 
-  // Verify the payload with the headers
   try {
     evt = wh.verify(payload, {
       "svix-id": svix_id,
@@ -67,23 +57,21 @@ export const handler: Handler = async (event) => {
       "svix-signature": svix_signature,
     }) as WebhookEvent;
   } catch (err) {
-    console.error("Error verifying webhook:", err);
+    console.error("❌ Svix verification failed:", err);
     return {
       statusCode: 400,
-      body: JSON.stringify({ error: "Error occurred" }),
+      body: JSON.stringify({ error: "Invalid webhook signature" }),
     };
   }
 
-  // Handle the webhook
-  const eventType = evt.type;
-
   try {
     await connectDB();
-    console.log("DB connected");
+    console.log("✅ MongoDB connected");
 
-    console.log("Received event:", eventType, evt.data);
+    console.log("📥 Incoming Clerk event:", evt.type);
 
-    switch (eventType) {
+    // Route the event type to the appropriate handler
+    switch (evt.type) {
       case "user.created":
         await handleUserCreated(evt.data);
         break;
@@ -100,30 +88,22 @@ export const handler: Handler = async (event) => {
         await handleSessionRemoved(evt.data);
         break;
       default:
-        console.log(`Unhandled event type: ${eventType}`);
+        console.log(`⚠️ Unhandled Clerk event: ${evt.type}`);
     }
 
     return {
       statusCode: 200,
       body: JSON.stringify({ message: "Webhook processed successfully" }),
     };
-  } catch (error: unknown) {
-    if (error instanceof Error) {
-      console.error("Error processing webhook:", error.message);
-      return {
-        statusCode: 500,
-        body: JSON.stringify({
-          error: "Internal server error",
-          details: error.message,
-        }),
-      };
-    } else {
-      console.error("Unknown error processing webhook:", error);
-      return {
-        statusCode: 500,
-        body: JSON.stringify({ error: "Internal server error" }),
-      };
-    }
+  } catch (error) {
+    console.error("🔥 Webhook processing failed:", error);
+    return {
+      statusCode: 500,
+      body: JSON.stringify({
+        error: "Internal server error",
+        details: error.message,
+      }),
+    };
   }
 };
 
@@ -371,31 +351,6 @@ async function handleUserDeleted(userData: any) {
   } catch (error) {
     console.error("Error deleting user:", error);
     throw error;
-  }
-}
-async function logUserActivity(
-  userId: string,
-  action: string,
-  metadata: Record<string, any> = {}
-) {
-  try {
-    await activityLogRepository.create({
-      userId,
-      action,
-      category: "auth", // You can parametrize this if needed
-      severity: "medium", // You can also parametrize this
-      resource: "user", // Adjust as needed
-      details: {
-        description: `User ${action} via Clerk webhook.`,
-        metadata,
-        ipAddress: "webhook",
-        userAgent: "clerk-webhook",
-      },
-      timestamp: new Date(),
-    });
-  } catch (error) {
-    console.error("Error logging user activity:", error);
-    // Don't rethrow to avoid blocking the webhook flow
   }
 }
 

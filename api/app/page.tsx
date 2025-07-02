@@ -18,9 +18,9 @@ export default function HomePage() {
         </p>
 
         <div className="mt-8 flex flex-col sm:flex-row justify-center items-center gap-4">
-          <Link href="/" target="_blank">
+          <Link href="/api-docs" target="_blank">
             <Button size="lg" className="w-48">
-              Get Started
+              API Docs
             </Button>
           </Link>
           <Link
