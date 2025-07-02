@@ -45,26 +45,24 @@ project-root/
 - **Lucide Icons**
 - **Clerk Auth**
 - **Stripe Payments**
-- **ElevenLabs TTS (optional)**
 
 #### Structure
 
+```
 front/
-├── actions/
-├── app/
-├── components/
-│ ├── ui/
-│ ├── modules/
-│ └── custom/
-├── hooks/
-├── lib/
-├── providers/
-├── store/
-├── types/
-└── public/
-
-
----
+├── actions/       # Server actions and form handlers
+├── app/           # Next.js App Router pages and layouts
+├── components/    # Reusable React components
+│   ├── ui/        # shadcn/ui components
+│   ├── modules/   # Feature-specific components
+│   └── custom/    # Custom shared components
+├── hooks/         # Custom React hooks
+├── lib/           # Utility functions and configurations
+├── providers/     # Context providers (Auth, Theme, etc.)
+├── store/         # Redux store and slices
+├── types/         # TypeScript type definitions
+└── public/        # Static assets
+```
 
 ## ⚙️ Backend Stack
 
@@ -78,18 +76,18 @@ front/
 
 #### Structure
 
+```
 api/
-├── actions/
-├── app/
-│ └── api/
-├── components/
-├── hooks/
-├── lib/
-├── models/
-└── types/
-
-
----
+├── actions/      # Server-side business logic
+├── app/          # Next.js App Router API routes
+│   └── api/      # RESTful API endpoints
+├── components/   # Server components
+├── hooks/        # Server-side hooks
+├── lib/          # Utility functions and configurations
+├── models/       # Mongoose database models
+├── repositories/ # Models reusable functions
+└── types/        # TypeScript type definitions
+```
 
 ## 🔧 Getting Started
 
@@ -107,19 +105,20 @@ api/
 
 ```bash
 git clone https://github.com/sylvaincodes/nextjs-fullstack-boilerplate.git
-cd nextjs-fullstack-boilerplate
+cd nextjs-fullstack-boilerplate```
 
 
 # Frontend
-cd front && bun install
+```bash cd front && bun install```
 
 # Backend
-cd ../api && bun install
+```bash cd ../api && bun install```
 
 
-🔐 Environment Variables
-
+## 🔐 Environment Variables
 Frontend .env.local
+
+```
 NEXT_PUBLIC_SERVER_URL=http://localhost:3000
 NEXT_PUBLIC_API_URL=http://localhost:3001
 
@@ -134,8 +133,11 @@ MAIL_PASSWORD=your_app_password
 MAIL_HOST=smtp.gmail.com
 MAIL_PORT=465
 MAIL_SECURE=true
+```
 
 Backend .env.local
+
+```
 NEXT_PUBLIC_WEBSITE_URL=http://localhost:3001
 
 NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=your_clerk_publishable_key
@@ -157,34 +159,36 @@ MAIL_SECURE=true
 
 ALLOWED_ORIGINS=http://localhost:3000
 NODE_ENV=development
+```
 
-🧪 Run Development Servers
+
+## 🧪 Run Development Servers
 Terminal 1: Backend
 cd api && bun dev
 
 cd front && bun dev
 
-🧪 Testing
+##  🧪 Testing
 
-# Frontend
+###  Frontend
 cd front && bun run test
 
-# Backend
+###  Backend
 cd api && bun run test
 
-# End-to-End
+###  End-to-End
 bun run test:e2e
 
-📦 Build for Production
+## 📦 Build for Production
 
-# Frontend
+###  Frontend
 cd front && bun run build
 
-# Backend
+###  Backend
 cd api && bun run build
 
 
-🤝 Contributing
+## 🤝 Contributing
 Fork the repo
 
 Create a feature branch: git checkout -b feature/my-feature
