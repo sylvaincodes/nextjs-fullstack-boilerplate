@@ -24,12 +24,12 @@ A real-world boilerplate to kickstart your full-stack Next.js applications—fea
 
 ## 🏗️ Project Structure
 
+```
 project-root/
 ├── front/ # Frontend Next.js Application
 └── api/ # Backend API Application
+```
 
-
----
 
 ## 🎨 Frontend Stack
 
@@ -104,7 +104,8 @@ api/
 
 ```
 git clone https://github.com/sylvaincodes/nextjs-fullstack-boilerplate.git
-cd nextjs-fullstack-boilerplate```
+cd nextjs-fullstack-boilerplate
+```
 
 
 # Frontend
@@ -162,6 +163,7 @@ NODE_ENV=development
 
 ## 🧪 Run Development Servers
 Terminal 1: Backend
+
 ```cd api && bun dev```
 
 ```cd front && bun dev```
