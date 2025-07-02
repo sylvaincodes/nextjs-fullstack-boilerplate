@@ -141,7 +141,8 @@ MAIL_SECURE=true
 
 Backend .env.local
 ```
-NEXT_PUBLIC_WEBSITE_URL=http://localhost:3001
+NEXT_PUBLIC_SERVER_URL=http://localhost:3001
+NEXT_PUBLIC_WEBSITE_URL=http://localhost:3000
 
 NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=your_clerk_publishable_key
 CLERK_SECRET_KEY=your_clerk_secret_key
@@ -162,6 +163,12 @@ MAIL_SECURE=true
 
 ALLOWED_ORIGINS=http://localhost:3000
 NODE_ENV=development
+
+
+#SENTRY ERROR DEBUGGING
+NEXT_PUBLIC_SENTRY_DSN=your_public_dsn_here
+SENTRY_DSN=your_private_dsn_here
+
 ```
 
 
